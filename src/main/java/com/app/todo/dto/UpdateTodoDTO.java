@@ -1,16 +1,36 @@
 package com.app.todo.dto;
 
-public class UpdateTodoDTO {
-    private Boolean starred;
-    private Boolean completed;
-    private String description;
+import java.util.Date;
 
-    public Boolean getStarred() {
-        return starred;
+public class UpdateTodoDTO {
+    private String title;
+    private String description;
+    private String priority;
+    private Boolean completed;
+    private String dueDate;
+
+    public String getTitle() {
+        return title;
     }
 
-    public void setStarred(Boolean starred) {
-        this.starred = starred;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
+    public String getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
     }
 
     public Boolean getCompleted() {

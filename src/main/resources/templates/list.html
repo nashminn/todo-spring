@@ -12,11 +12,11 @@
         <form th:action="@{/todos/delete/{id}(id=${todo.id})}" method="post">
             <button type="submit">Delete</button>
         </form>
-        <form th:action="@{/todos/update/{id}(id=${todo.id})}" method="post">
+        <form th:action="@{/todos/{id}(id=${todo.id})}" method="get">
             <input type="hidden" name="starred" th:value="${todo.starred ? false : true}"/>
             <button type="submit" th:text="${todo.completed ? 'Mark Incomplete' : 'Mark Complete'}"></button>
         </form>
-        <form th:action="@{/todos/update/{id}(id=${todo.id})}" method="post">
+        <form th:action="@{/todos/{id}(id=${todo.id})}" method="get">
             <input type="hidden" name="starred" th:value="${todo.starred ? false : true}"/>
             <button type="submit" th:text="${todo.starred ? 'Unstar' : 'Star'}"></button>
         </form>
