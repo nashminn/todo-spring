@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@Controller
+@Controller()
 @RequestMapping(value = "/todos")
 public class TodoController {
     @Autowired
@@ -28,14 +28,14 @@ public class TodoController {
 
         Todo todo = optionalTodo.get();
         model.addAttribute("todo", todo);
-        return "todo/details";
+        return "details";
     }
 
     @GetMapping
     public String getAllTodos(Model model) {
         List<Todo> todoList = todoService.getAllTodos();
         model.addAttribute("todos", todoList);
-        return "todo/list";
+        return "list"; // returns the name of Thymeleaf template
     }
 
     @PostMapping
