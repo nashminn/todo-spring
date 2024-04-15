@@ -60,8 +60,7 @@
       <span class="due-date" th:text="${'Due Date: ' + todo.dueDate}"></span><br>
       <span class="status" th:text="${todo.completed ? 'Status: Complete' : 'Status: Incomplete'}"></span>
       <div>
-        <a th:href="@{'/todos/edit/' + ${todo.id}}">Edit</a>
-<!--        <a th:href="@{'/todos/delete/' + ${todo.id}}" onclick="return confirm('Are you sure?')">Delete</a>-->
+<!--        <a th:href="@{'/todos/update/' + ${todo.id}}">Edit</a>-->
         <form th:action="@{/todos/delete/{id}(id=${todo.id})}" method="post" id="deleteTodoForm">
           <button type="button" onclick="confirmDelete()">Delete</button>
         </form>
