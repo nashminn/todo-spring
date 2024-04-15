@@ -15,16 +15,20 @@ public class Todo {
     private String priority;
     private Boolean completed;
     private String dueDate;
+    private String creationDate;
+
+
 
     public Todo() {
     }
 
-    public Todo(String title, String description, String priority, Boolean completed, String dueDate) {
+    public Todo(String title, String description, String priority, Boolean completed, String dueDate, String creationDate) {
         this.title = title;
         this.description = description;
         this.priority = priority;
         this.completed = completed;
         this.dueDate = dueDate;
+        this.creationDate = creationDate;
     }
 
     public Long getId() {
@@ -73,5 +77,25 @@ public class Todo {
 
     public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    @Override
+    public String toString() {
+        String todoStr = "Title: " + getTitle() + "\n" +
+                "Description: " + getDescription() + "\n" +
+                "Priority: " + getPriority() + "\n" +
+                "Completed: " + getCompleted().toString() + "\n" +
+                "Creation date: " + getCreationDate() + "\n" +
+                "Due date: " + getDueDate() + "\n";
+
+        return todoStr;
     }
 }

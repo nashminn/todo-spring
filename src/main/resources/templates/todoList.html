@@ -52,28 +52,87 @@
 <!-- Display Existing Todos -->
 <h2>Todo List</h2>
 <div th:if="${not #lists.isEmpty(todos)}">
-  <ul>
-    <li th:each="todo : ${todos}" class="todo-item">
-      <span class="title" th:text="${todo.title}"></span><br>
-      <span class="description" th:text="${todo.description}"></span><br>
-      <span class="priority" th:text="${'Priority: ' + todo.priority}"></span><br>
-      <span class="due-date" th:text="${'Due Date: ' + todo.dueDate}"></span><br>
-      <span class="status" th:text="${todo.completed ? 'Status: Complete' : 'Status: Incomplete'}"></span>
+  <style>
+    .todo-list {
+        list-style-type: none;
+        padding: 0; /* Optional: remove default padding */
+        margin: 0; /* Optional: remove default margin */
+    }
+  </style>
+  <ul class="todo-list">
+    <li th:each="todo : ${todos}" class="todo-item" style="border: 1px solid #ccc; border-radius: 5px; padding: 10px; margin-bottom: 10px; margin-right: 40px; margin-left: 40px">
+      <div style="margin-bottom: 5px;">
+        <input type="checkbox" th:checked="${todo.completed}" onchange="updateCompletedStatus(this, [[${todo.id}]])" style="margin-right: 5px;" />
+        <span class="title" style="font-weight: bold;" th:text="${todo.title}"></span>
+        <script>
+          function updateCompletedStatus(checkbox, todoId) {
+              var completed = checkbox.checked;
+              var xhr = new XMLHttpRequest();
+              var updateTodoDTO = {
+                title: todo.title, // Set the title to an empty string as it's not being updated
+                description: todo.description, // Set the description to an empty string as it's not being updated
+                priority: todo.priority, // Set the priority to an empty string as it's not being updated
+                completed: completed, // Set the completed status based on the checkbox
+                dueDate: todo.dueDate // Set the due date to an empty string as it's not being updated
+              };
+              var params = JSON.stringify(updateTodoDTO);
+              xhr.open('POST', '/todos/update/' + todoId, true);
+              xhr.setRequestHeader('Content-Type', 'application/json');
+              xhr.send(params);
+
+
+              var statusElement = document.getElementById("status-id");
+              statusElement.textContent = completed ? 'Status: Complete' : 'Status: Incomplete';
+
+           }
+        </script>
+      </div>
+      <div style="margin-bottom: 5px;">
+        <span class="description" th:text="${todo.description}"></span>
+      </div>
+      <div style="margin-bottom: 5px;">
+        <span class="priority" th:text="${'Priority: ' + todo.priority}" style="color: #007bff;"></span>
+      </div>
+      <div style="margin-bottom: 5px;">
+        <span class="due-date" th:text="${'Due Date: ' + todo.dueDate}" style="color: #28a745;"></span>
+      </div>
+      <div style="margin-bottom: 5px;">
+        <span id="status-id" class="status" th:text="${todo.completed ? 'Status: Complete' : 'Status: Incomplete'}"></span>
+      </div>
+      <div style="margin-bottom: 5px;">
+        <span class="creation-date" th:text="${'Creation Date: ' + todo.creationDate}" style="color: #6c757d;"></span>
+      </div>
       <div>
-<!--        <a th:href="@{'/todos/update/' + ${todo.id}}">Edit</a>-->
-        <form th:action="@{/todos/delete/{id}(id=${todo.id})}" method="post" id="deleteTodoForm">
-          <button type="button" onclick="confirmDelete()">Delete</button>
+        <!-- <a th:href="@{'/todos/update/' + ${todo.id}}" style="text-decoration: none; color: #007bff; margin-right: 10px;">Edit</a> -->
+        <!-- Delete form -->
+        <form th:action="@{/todos/delete/{id}(id=${todo.id})}" method="post"
+              id="deleteTodoForm${todo.id}" style="display: inline;">
+          <input type="hidden" name="todoId" th:value="${todo.id}">
+          <button type="button" onclick="confirmDelete(this)"
+                  style="background-color: #dc3545; color: #fff; border: none;
+                   border-radius: 3px; padding: 5px 10px; cursor: pointer;">Delete</button>
         </form>
 
         <script>
-            function confirmDelete() {
-                if (confirm('Are you sure you want to delete this todo?')) {
-                    document.getElementById('deleteTodoForm').submit();
-                }
-            }
+          function confirmDelete(button) {
+              var form = button.closest('form');
+              var hiddenInput = form.querySelector('input[name="todoId"]');
+              var todoId = hiddenInput.value;
+
+              if (confirm('Are you sure you want to delete this todo?')) {
+                  form.submit();
+              }
+          }
         </script>
+
+
+
+
       </div>
     </li>
+
+
+
   </ul>
 </div>
 <div th:if="${#lists.isEmpty(todos)}">

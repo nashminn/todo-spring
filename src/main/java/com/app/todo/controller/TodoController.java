@@ -5,10 +5,16 @@ import com.app.todo.dto.UpdateTodoDTO;
 import com.app.todo.model.Todo;
 import com.app.todo.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,8 +47,26 @@ public class TodoController {
 
     @PostMapping
     public String createTodo(@ModelAttribute CreateTodoDTO createTodoDTO) {
-        System.out.println(createTodoDTO.getTitle() + createTodoDTO.getDescription() + createTodoDTO.getPriority()  + createTodoDTO.getDueDate().toString());
-        Todo newTodo = new Todo(createTodoDTO.getTitle(), createTodoDTO.getDescription(), createTodoDTO.getPriority(), false, createTodoDTO.getDueDate());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date due = null;
+        try{
+            due = dateFormat.parse(createTodoDTO.getDueDate());
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(due);
+            calendar.set(Calendar.HOUR_OF_DAY, 23);
+            calendar.set(Calendar.MINUTE, 59);
+            calendar.set(Calendar.SECOND, 59);
+
+            due = calendar.getTime();
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Todo newTodo = new Todo(createTodoDTO.getTitle(), createTodoDTO.getDescription(), createTodoDTO.getPriority(), false, due.toString(), (new Date()).toString());
+
+        System.out.println(newTodo.toString());
         todoService.saveTodo(newTodo);
         return "redirect:/todos";
     }
@@ -51,7 +75,7 @@ public class TodoController {
     public String updateTodoById(@PathVariable("id") Long id, @ModelAttribute UpdateTodoDTO updateTodoDTO) {
         Optional<Todo> optionalTodo = todoService.findTodoById(id);
         if (optionalTodo.isEmpty()) {
-            return "error";
+            return ("Todo with ID " + id + " not found");
         }
         Todo todo = optionalTodo.get();
 
@@ -60,25 +84,12 @@ public class TodoController {
         todo.setPriority(updateTodoDTO.getPriority());
         todo.setCompleted(updateTodoDTO.getCompleted());
         todo.setDueDate(updateTodoDTO.getDueDate());
-
+        System.out.println("\t\t\t\t" + todo.toString());
         todoService.saveTodo(todo);
 
         return "redirect:/todos";
     }
 
-//    @DeleteMapping("/{id}")
-//    public String deleteTodoById(@PathVariable("id") Long id) {
-//        Optional<Todo> optionalTodo = todoService.findTodoById(id);
-//
-//        if(optionalTodo.isEmpty()) {
-//            return "Error: Todo not found for deletion";
-//        }
-//
-//        Todo todo = optionalTodo.get();
-//
-//        todoService.deleteTodo(todo);
-//        return "redirect:/todos";
-//    }
 
     @PostMapping("/delete/{id}")
     public String deleteTodoById(@PathVariable("id") Long id) {

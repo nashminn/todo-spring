@@ -8,6 +8,15 @@ public class CreateTodoDTO {
     private String priority;
     private Boolean completed;
     private String dueDate;
+    private String creationDate;
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
+    }
 
     public String getTitle() {
         return title;
