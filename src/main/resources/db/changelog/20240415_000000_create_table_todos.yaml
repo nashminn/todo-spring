@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 20240415_000000_create_table_todos
+      id: 1
       author: Nashmin Nawar
       changes:
         - createTable:
@@ -13,25 +13,35 @@ databaseChangeLog:
                     nullable: false
                     primaryKey: true
                     primaryKeyName: todos_pkey
+                    autoIncrement: true
               - column:
                   name: title
                   type: VARCHAR(255)
+                  constraints:
+                    nullable: false
               - column:
                   name: description
-                  type: VARCHAR(65535)
+                  type: VARCHAR(1024)
+                  constraints:
+                    nullable: false
               - column:
                   name: completed
                   type: BOOLEAN
+                  constraints:
+                    nullable: false
               - column:
                   name: priority
                   type: VARCHAR(255)
+                  constraints:
+                    nullable: false
               - column:
                   name: creation_date
-                  type: TIMESTAMP WITHOUT TIME ZONE
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
               - column:
                   name: due_date
-                  type: TIMESTAMP WITHOUT TIME ZONE
-        - addAutoIncrement:
-            tableName: todos
-            columnName: id
-            generationType: IDENTITY
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
