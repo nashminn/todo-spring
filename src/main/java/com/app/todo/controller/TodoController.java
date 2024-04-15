@@ -71,6 +71,18 @@ public class TodoController {
         return "redirect:/todos";
     }
 
+    @PostMapping("/update/complete/{id}")
+    public String updateTodoStatusById(@PathVariable("id") Long id, @RequestParam("completed") boolean completed) {
+        Optional<Todo> optionalTodo = todoService.findTodoById(id);
+        if (optionalTodo.isEmpty()) {
+            return "Todo with ID " + id + " not found";
+        }
+        Todo todo = optionalTodo.get();
+        todo.setCompleted(completed);
+        todoService.saveTodo(todo);
+        return "redirect:/todos";
+    }
+
     @PostMapping("/update/{id}")
     public String updateTodoById(@PathVariable("id") Long id, @ModelAttribute UpdateTodoDTO updateTodoDTO) {
         Optional<Todo> optionalTodo = todoService.findTodoById(id);

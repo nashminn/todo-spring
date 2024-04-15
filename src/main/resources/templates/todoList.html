@@ -6,12 +6,13 @@
   <title>Todo Application</title>
   <!-- Bootstrap CSS -->
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link th:href="@{styles/todoList.css}" rel="stylesheet" />
 </head>
 <body>
-<h1>Todo Application</h1>
+<h1 >Todo Application</h1>
 
 <!-- Button to Open Add Todo Modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addTodoModal">Add Todo</button>
+<button type="button" class="btn btn-primary addTodoButton" data-toggle="modal" data-target="#addTodoModal" >Add Todo</button>
 
 <!-- Add Todo Modal -->
 <div class="modal fade" id="addTodoModal" tabindex="-1" role="dialog" aria-labelledby="addTodoModalLabel" aria-hidden="true">
@@ -50,43 +51,40 @@
 </div>
 
 <!-- Display Existing Todos -->
-<h2>Todo List</h2>
+<!--<h2>Todo List</h2>-->
 <div th:if="${not #lists.isEmpty(todos)}">
-  <style>
-    .todo-list {
-        list-style-type: none;
-        padding: 0; /* Optional: remove default padding */
-        margin: 0; /* Optional: remove default margin */
-    }
-  </style>
   <ul class="todo-list">
     <li th:each="todo : ${todos}" class="todo-item" style="border: 1px solid #ccc; border-radius: 5px; padding: 10px; margin-bottom: 10px; margin-right: 40px; margin-left: 40px">
       <div style="margin-bottom: 5px;">
-        <input type="checkbox" th:checked="${todo.completed}" onchange="updateCompletedStatus(this, [[${todo.id}]])" style="margin-right: 5px;" />
-        <span class="title" style="font-weight: bold;" th:text="${todo.title}"></span>
-        <script>
-          function updateCompletedStatus(checkbox, todoId) {
-              var completed = checkbox.checked;
-              var xhr = new XMLHttpRequest();
-              var updateTodoDTO = {
-                title: todo.title, // Set the title to an empty string as it's not being updated
-                description: todo.description, // Set the description to an empty string as it's not being updated
-                priority: todo.priority, // Set the priority to an empty string as it's not being updated
-                completed: completed, // Set the completed status based on the checkbox
-                dueDate: todo.dueDate // Set the due date to an empty string as it's not being updated
-              };
-              var params = JSON.stringify(updateTodoDTO);
-              xhr.open('POST', '/todos/update/' + todoId, true);
-              xhr.setRequestHeader('Content-Type', 'application/json');
-              xhr.send(params);
+        <form th:action="@{/todos/update/complete/{id}(id=${todo.id})}" method="post" data-todo-id="${todo.id}" style="display: inline;">
+          <input type="hidden" name="completed" value="" />
+          <input type="checkbox" th:checked="${todo.completed}" onchange="updateTodoStatus(this)" style="margin-right: 5px;" />
+          <span class="title" style="font-weight: bold;" th:text="${todo.title}"></span>
 
+          <script>
+            function updateTodoStatus(checkbox) {
+                var form = checkbox.closest('form');
+                var todoId = form.getAttribute('data-todo-id');
+                var completedInput = form.querySelector('input[name="completed"]');
+                completedInput.value = checkbox.checked;
 
-              var statusElement = document.getElementById("status-id");
-              statusElement.textContent = completed ? 'Status: Complete' : 'Status: Incomplete';
+                var xhr = new XMLHttpRequest();
+                var params = "completed=" + checkbox.checked;
+                xhr.open('POST', '/todos/update/' + todoId + '/complete', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.send(params);
 
-           }
-        </script>
+                // Optional: You can remove the following lines if you don't want to update the status text immediately
+                //var statusElement = checkbox.parentNode.querySelector(".status");
+                //statusElement.textContent = checkbox.checked ? 'Status: Complete' : 'Status: Incomplete';
+            }
+          </script>
+        </form>
       </div>
+
+
+
+
       <div style="margin-bottom: 5px;">
         <span class="description" th:text="${todo.description}"></span>
       </div>

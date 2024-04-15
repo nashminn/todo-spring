@@ -1,0 +1,15 @@
+h1 {
+    text-align: center;
+}
+
+.addTodoButton {
+    display: block;
+    margin: 20px auto;
+
+}
+
+.todo-list {
+    list-style-type: none;
+    padding: 0; /* Optional: remove default padding */
+    margin: 0; /* Optional: remove default margin */
+}
