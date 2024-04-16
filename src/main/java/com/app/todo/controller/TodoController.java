@@ -34,7 +34,7 @@ public class TodoController {
 
         Todo todo = optionalTodo.get();
         model.addAttribute("todo", todo);
-//        return "details";
+
         return "todoList";
     }
 
@@ -66,7 +66,7 @@ public class TodoController {
 
         Todo newTodo = new Todo(createTodoDTO.getTitle(), createTodoDTO.getDescription(), createTodoDTO.getPriority(), false, due.toString(), (new Date()).toString());
 
-        System.out.println(newTodo.toString());
+//        System.out.println(newTodo.toString());
         todoService.saveTodo(newTodo);
         return "redirect:/todos";
     }
@@ -96,7 +96,7 @@ public class TodoController {
         todo.setPriority(updateTodoDTO.getPriority());
         todo.setCompleted(updateTodoDTO.getCompleted());
         todo.setDueDate(updateTodoDTO.getDueDate());
-        System.out.println("\t\t\t\t" + todo.toString());
+
         todoService.saveTodo(todo);
 
         return "redirect:/todos";
